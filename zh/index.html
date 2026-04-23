@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FileHub - 私有云即时文件搜索与预览</title>
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #121214;
+      --bg-tertiary: #18181b;
+      --bg-hover: #27272a;
+      --bg-selected: rgba(59, 130, 246, 0.15);
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --border-color: #27272a;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); }
+    
+    .lang-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 100;
+      padding: 12px 20px;
+      display: flex;
+      gap: 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .lang-bar a {
+      color: var(--text-secondary);
+      font-size: 14px;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .lang-bar a.active {
+      background: var(--accent);
+      color: white;
+    }
+    .lang-bar a:hover:not(.active) { background: var(--bg-hover); }
+    .lang-bar .github-link {
+      margin-right: auto;
+      color: var(--text-muted);
+    }
+    .lang-bar .github-link:hover {
+      color: var(--text-primary);
+    }
+    
+    .hero {
+      padding: 100px 24px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    }
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .subtitle {
+      font-size: clamp(18px, 3vw, 24px);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    .hero .tagline {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover { background: var(--bg-hover); }
+    
+    .section {
+      padding: 60px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .pain-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .pain-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .pain-card h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pain-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .pain-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(239, 68, 68, 0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+    }
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .screenshot {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot-caption {
+      padding: 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .screenshot-caption strong {
+      color: var(--text-primary);
+    }
+    
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 28px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .product-card h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    .product-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .product-card .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .tag {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .product-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .product-links a {
+      font-size: 14px;
+    }
+    
+    .downloads {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+    }
+    .download-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .download-item {
+      position: relative;
+    }
+    .download-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .download-badge {
+      display: block;
+      text-align: center;
+      padding: 10px 20px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      color: var(--text-primary);
+      transition: background 0.2s;
+      cursor: pointer;
+      min-width: 120px;
+    }
+    .download-badge:hover,
+    .download-badge.selected {
+      background: var(--bg-hover);
+    }
+    .install-guide {
+      display: none;
+      margin-top: 20px;
+      padding: 20px 24px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      text-align: left;
+    }
+    .install-guide.show {
+      display: block;
+    }
+    .install-guide h4 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+    .install-guide pre {
+      background: var(--bg-tertiary);
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 8px 0;
+      line-height: 1.8;
+    }
+    .install-guide p {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    .install-guide .links {
+      margin-top: 10px;
+    }
+    .install-guide .links a {
+      color: var(--accent);
+      font-size: 13px;
+      margin-right: 16px;
+    }
+    
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .gallery-item {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .gallery-item .caption {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .gallery-item .caption strong {
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .tabs-gallery {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .tab-btn {
+      padding: 8px 20px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .tab-btn.active,
+    .tab-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .lightbox.show {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .lightbox .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+    }
+    
+    .qr-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding: 24px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .qr-section img {
+      width: 150px;
+      height: 150px;
+    }
+    .qr-section .text {
+      text-align: left;
+    }
+    .qr-section h4 {
+      margin-bottom: 8px;
+    }
+    .qr-section p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .footer {
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    @media (max-width: 600px) {
+      .hero { padding: 80px 16px 40px; }
+      .lang-bar { padding: 8px 12px; gap: 8px; }
+      .section { padding: 40px 16px; }
+      .qr-section { text-align: center; }
+      .qr-section .text { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-bar">
+    <a href="https://github.com/filehub1" class="github-link">GitHub</a>
+    <a href="/">English</a>
+    <a href="/zh/" class="active">中文</a>
+    <a href="/ja/">日本語</a>
+  </div>
+
+  <section class="hero">
+    <h1>FileHub</h1>
+    <p class="subtitle">私有云文件分散各地？一键搜索，即刻预览</p>
+    <p class="tagline">跨平台文件搜索与预览解决方案 | Windows · Android · Server</p>
+    <div class="cta-buttons">
+      <a href="#downloads" class="btn btn-primary">立即下载</a>
+      <a href="#products" class="btn btn-secondary">了解更多</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">文件管理，这些困扰你有吗？</h2>
+    <div class="pain-points">
+      <div class="pain-card">
+        <h3><span class="pain-icon">🔍</span> 文件找不到？</h3>
+        <p>电脑、手机、平板里的文件散落各处，想用的时候总是找不到。网盘搜索太慢，本地搜索又只能搜一台设备。</p>
+      </div>
+      <div class="pain-card">
+        <h3><span class="pain-icon">📱</span> 多设备访问难？</h3>
+        <p>想用手机查看电脑里的文档，却要先把文件传到网盘。不同设备之间传输文件麻烦又耗时。</p>
+      </div>
+      <div class="pain-card">
+        <h3><span class="pain-icon">👀</span> 预览太麻烦？</h3>
+        <p>想看个文档还要先找对应的软件打开。PDF、图片、代码每种格式都要用不同应用，麻烦！</p>
+      </div>
+      <div class="pain-card">
+        <h3><span class="pain-icon">🐢</span> 搜索太慢？</h3>
+        <p>等搜索结果等到花儿都谢了。文件名稍微不记得，就彻底搜不到。就没有快一点的方法吗？</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">FileHub 帮你解决</h2>
+    <div class="features">
+      <div class="feature-card">
+        <h3>⚡ 即时搜索</h3>
+        <p>输入关键词，结果瞬间出现。支持精确匹配、模糊搜索、正则表达式，满足各种搜索需求。</p>
+      </div>
+      <div class="feature-card">
+        <h3>📄 强大预览</h3>
+        <p>无需下载专用软件，浏览器直接预览。PDF、图片、视频、Office 文档、代码、Markdown，全部内置！</p>
+      </div>
+      <div class="feature-card">
+        <h3>🌐 局域网访问</h3>
+        <p>手机、平板、电脑同一 Wi-Fi 下直接访问。扫二维码就能在手机上浏览电脑文件。</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 隐私安全</h3>
+        <p>数据全部本地存储，不上传云端。局域网访问可设置密码保护，安全可控。</p>
+      </div>
+      <div class="feature-card">
+        <h3>🎨 优雅体验</h3>
+        <p>深色/浅色主题适配，暗光环境下也能舒适使用。键盘快捷键熟练后效率翻倍。</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔌 跨平台覆盖</h3>
+        <p>Windows 桌面应用、Android 手机应用、Docker 服务器，总有一款适合你的使用场景。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">立即体验</h2>
+    <div class="qr-section">
+      <img src="/images/android/android-qr.png" alt="Android QR Code">
+      <div class="text">
+        <h4>扫码下载 Android 版</h4>
+        <p>或访问 GitHub Releases 下载最新版本</p>
+        <p style="margin-top: 8px;"><a href="https://github.com/filehub1/android/releases">github.com/filehub1/android/releases →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="screenshots">
+    <h2 class="section-title">界面预览</h2>
+    <div class="tabs-gallery">
+      <button class="tab-btn active" onclick="switchTab('desktop')">🖥️ 桌面端</button>
+      <button class="tab-btn" onclick="switchTab('android')">📱 Android</button>
+    </div>
+    <div class="tab-content active" id="tab-desktop">
+      <div class="gallery-item">
+        <img src="/images/docker/desktop-search.png" alt="FileHub 即时搜索" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>即时搜索</strong>输入即显示结果</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/docker/desktop-preview.png" alt="FileHub 文件预览" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>文件预览</strong>无需下载即可查看文档</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/docker/desktop-fuzzy-search.png" alt="FileHub 模糊搜索" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>模糊搜索</strong>文件名输错也能找到</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/docker/desktop-dark-theme.png" alt="FileHub 深色主题" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>深色主题</strong>护眼舒适</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/docker/desktop-lan-access.png" alt="FileHub 局域网访问" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>局域网访问</strong>其他设备也能访问文件</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/docker/desktop-keyboard-shortcuts.png" alt="FileHub 快捷键" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>键盘快捷键</strong>飞速导航</div>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-android">
+      <div class="gallery-item">
+        <img src="/images/android/android-search.png" alt="FileHub Android 搜索" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>手机搜索</strong>随时随地搜索文件</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/android/android-qr-share.png" alt="FileHub Android 二维码" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>二维码分享</strong>扫码在其他设备打开</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/android/android-menu.png" alt="FileHub Android 菜单" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>快捷菜单</strong>轻松访问所有功能</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/android/android-settings.png" alt="FileHub Android 设置" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>设置</strong>个性化配置</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/android/android-files.png" alt="FileHub Android 文件" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>文件浏览</strong>管理和浏览文件</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/android/android-files2.png" alt="FileHub Android 文件2" onclick="openLightbox(this.src)">
+        <div class="caption"><strong>完整访问</strong>访问所有文件</div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">&times;</span>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <section class="section" id="products">
+    <h2 class="section-title">多端覆盖，按需选择</h2>
+    <div class="products">
+      <div class="product-card">
+        <h3>🖥️ Windows 应用</h3>
+        <p>桌面端完整功能，系统托盘常驻后台，Windows 资源管理器深度集成。</p>
+        <div class="tags">
+          <span class="tag">WPF + WebView2</span>
+          <span class="tag">系统托盘</span>
+          <span class="tag">原生体验</span>
+        </div>
+        <div class="product-links">
+          <a href="https://github.com/filehub1/filehub-windows-app/releases">下载 ↓</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <h3>📱 Android 应用</h3>
+        <p>手机文件管理新方式，内置 Web 服务器，局域网内多设备访问。</p>
+        <div class="tags">
+          <span class="tag">Kotlin</span>
+          <span class="tag">本地服务器</span>
+          <span class="tag">QR 分享</span>
+        </div>
+        <div class="product-links">
+          <a href="https://github.com/filehub1/android/releases">下载 ↓</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <h3>🐳 Docker 服务器</h3>
+        <p>NAS/树莓派/服务器通吃，Docker 一键部署，家庭媒体中心必备。</p>
+        <div class="tags">
+          <span class="tag">Node.js + React</span>
+          <span class="tag">Docker</span>
+          <span class="tag">跨平台</span>
+        </div>
+        <div class="product-links">
+          <a href="https://hub.docker.com/r/exiahuang/filehub-server">Docker Hub →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="downloads">
+    <div class="downloads">
+      <h2 class="section-title">立即开始使用</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 8px;">选择适合你的版本</p>
+      <div class="download-links">
+        <a href="https://github.com/filehub1/filehub-windows-app/releases" class="download-badge" onclick="showGuide('windows'); return false;">
+          🖥️ Windows
+        </a>
+        <a href="https://github.com/filehub1/android/releases" class="download-badge" onclick="showGuide('android'); return false;">
+          📱 Android APK
+        </a>
+        <a href="https://hub.docker.com/r/exiahuang/filehub-server" class="download-badge" onclick="showGuide('docker'); return false;">
+          🐳 Docker
+        </a>
+        <a href="https://www.npmjs.com/package/@exiahuang/filehub" class="download-badge" onclick="showGuide('npm'); return false;">
+          📦 npm
+        </a>
+      </div>
+      <div class="install-guide" id="guide-windows">
+        <h4>下载并运行</h4>
+        <pre>1. 从 GitHub Releases 下载
+2. 解压 zip 文件
+3. 运行 filehub.exe</pre>
+        <p>需要 Windows 10/11 及 WebView2 运行时</p>
+        <div class="links"><a href="https://github.com/filehub1/filehub-windows-app/releases">Releases →</a><a href="https://github.com/filehub1/filehub-windows-app">源码 →</a></div>
+      </div>
+      <div class="install-guide" id="guide-android">
+        <h4>下载并安装</h4>
+        <pre>1. 从 GitHub Releases 下载 APK
+2. 在设置中开启"安装未知应用"
+3. 打开 APK 文件进行安装</pre>
+        <p>需要 Android 8.0+（API 26+）</p>
+        <div class="links"><a href="https://github.com/filehub1/android/releases">Releases →</a><a href="https://github.com/filehub1/android">源码 →</a></div>
+      </div>
+      <div class="install-guide" id="guide-docker">
+        <h4>Docker 运行</h4>
+        <pre>docker pull exiahuang/filehub-server:latest
+docker run -d -p 6543:6543 -v /data:/data exiahuang/filehub-server:latest
+# 然后在浏览器打开 http://localhost:6543</pre>
+        <p>一条命令即可启动。支持 NAS、树莓派、任意服务器。</p>
+        <div class="links"><a href="https://hub.docker.com/r/exiahuang/filehub-server">Docker Hub →</a><a href="https://github.com/filehub1/filehub-server">源码 →</a></div>
+      </div>
+      <div class="install-guide" id="guide-npm">
+        <h4>安装并运行</h4>
+        <pre>npm install -g @exiahuang/filehub
+filehub-server
+# 然后在浏览器打开 http://localhost:6543</pre>
+        <p>需要 Node.js 18+</p>
+        <div class="links"><a href="https://www.npmjs.com/package/@exiahuang/filehub">npm →</a><a href="https://github.com/filehub1/filehub-server">源码 →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2024 FileHub Project. MIT License.</p>
+    <p style="margin-top: 8px;">
+      <a href="https://github.com/filehub1">GitHub</a> ·
+      <a href="https://hub.docker.com/r/exiahuang/filehub-server">Docker Hub</a> ·
+      <a href="https://www.npmjs.com/package/@exiahuang/filehub">npm</a>
+    </p>
+  </footer>
+  <script>
+    function showGuide(type) {
+      var guides = document.querySelectorAll('.install-guide');
+      guides.forEach(function(g) { g.classList.remove('show'); });
+      var guide = document.getElementById('guide-' + type);
+      if (guide) { guide.classList.add('show'); }
+      var badges = document.querySelectorAll('.download-badge');
+      badges.forEach(function(b) { b.classList.remove('selected'); });
+      event.target.classList.add('selected');
+    }
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.getElementById('tab-' + tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('show');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('show');
+    }
+  </script>
+</body>
+</html>
