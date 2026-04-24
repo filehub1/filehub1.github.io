@@ -454,7 +454,7 @@
   <section class="hero">
     <h1>FileHub</h1>
     <p class="subtitle">私有クラウドに散らばったファイル？今すぐ検索、その場でプレビュー</p>
-    <p class="tagline">クロスプラットフォームファイル検索＆プレビュー | Windows · Android · Server</p>
+    <p class="tagline">クロスプラットフォームファイル検索＆プレビュー | Windows · Android · VSCode · Server</p>
     <div class="cta-buttons">
       <a href="#downloads" class="btn btn-primary">今すぐダウンロード</a>
       <a href="#products" class="btn btn-secondary">詳細を見る</a>
@@ -618,6 +618,19 @@
         </div>
       </div>
       <div class="product-card">
+        <h3>💻 VSCode拡張機能</h3>
+        <p>VSCode内でファイルを即時検索・プレビュー。テキストファイルはワンキーでエディタに直接開く。</p>
+        <div class="tags">
+          <span class="tag">VSCode</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">LAN対応</span>
+        </div>
+        <div class="product-links">
+          <a href="https://marketplace.visualstudio.com/items?itemName=ExiaHuang.filehub-vscode">Marketplace →</a>
+          <a href="https://github.com/filehub1/filehub-vscode">GitHub →</a>
+        </div>
+      </div>
+      <div class="product-card">
         <h3>🐳 Dockerサーバー</h3>
         <p>NAS、ラズパイ、サーバーどれでも動く。Docker一発デプロイ。ホームメディアセンターに最適。</p>
         <div class="tags">
@@ -648,6 +661,9 @@
         </a>
         <a href="https://www.npmjs.com/package/@exiahuang/filehub" class="download-badge" onclick="showGuide('npm'); return false;">
           📦 npm
+        </a>
+        <a href="https://marketplace.visualstudio.com/items?itemName=ExiaHuang.filehub-vscode" class="download-badge" onclick="showGuide('vscode'); return false;">
+          💻 VSCode
         </a>
       </div>
       <div class="install-guide" id="guide-windows">
@@ -681,6 +697,15 @@ filehub-server
 # ブラウザで http://localhost:6543 を開く</pre>
         <p>Node.js 18+ が必要</p>
         <div class="links"><a href="https://www.npmjs.com/package/@exiahuang/filehub">npm →</a><a href="https://github.com/filehub1/filehub-server">ソースコード →</a></div>
+      </div>
+      <div class="install-guide" id="guide-vscode">
+        <h4>インストール＆使い方</h4>
+        <pre>1. VSCode Marketplaceからインストール（"FileHub"で検索）
+   または: code --install-extension filehub-vscode.vsix
+2. Ctrl+Shift+F でFileHubを開く
+3. 設定でインデックスディレクトリを設定</pre>
+        <p>VSCode 1.85+ と Node.js 18+ が必要</p>
+        <div class="links"><a href="https://marketplace.visualstudio.com/items?itemName=ExiaHuang.filehub-vscode">Marketplace →</a><a href="https://github.com/filehub1/filehub-vscode">ソースコード →</a></div>
       </div>
     </div>
   </section>
