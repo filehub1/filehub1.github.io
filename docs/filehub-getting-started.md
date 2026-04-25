@@ -14,10 +14,10 @@ Choose your platform:
 The full native experience with system tray background running.
 
 **Requirements:**
-- Windows 10/11
+- Windows/MacOs/Linux
 - WebView2 Runtime (usually pre-installed on Windows 11)
 
-[Download from GitHub Releases →](https://github.com/filehub1/filehub-windows-app/releases)
+[Download from GitHub Releases →](https://github.com/filehub1/filehub-desktop/releases)
 
 ---
 

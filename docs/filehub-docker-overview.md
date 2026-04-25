@@ -26,7 +26,7 @@ Open `http://localhost:6543` in your browser.
 
 - [Full Docker Documentation →](/docs/filehub-docker.md)
 - [Getting Started Guide →](/docs/filehub-getting-started.md)
-- [Windows App →](/docs/filehub-windows.md)
+- [Desktop App →](/docs/filehub-windows.md)
 - [Android App →](/docs/filehub-android.md)
 
 ## License

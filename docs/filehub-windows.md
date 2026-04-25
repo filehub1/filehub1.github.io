@@ -1,8 +1,8 @@
-# FileHub Windows App
+# filehub-desktop
 
-**Native Windows desktop app for instant file search and preview**
+**Native desktop app for Windows, macOS, and Linux**
 
-A Windows application that brings FileHub's powerful search and preview capabilities directly to your desktop. Runs in the background with system tray support.
+A desktop application that brings FileHub's powerful search and preview capabilities directly to your desktop across Windows, macOS, and Linux. Runs in the background with system tray support.
 
 ## Features
 
@@ -15,19 +15,19 @@ A Windows application that brings FileHub's powerful search and preview capabili
 
 ## Download
 
-[![GitHub Release](https://img.shields.io/github/v/release/filehub1/filehub-windows-app?include_prereleases&label=release)](https://github.com/filehub1/filehub-windows-app/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/filehub1/filehub-windows-app/total)](https://github.com/filehub1/filehub-windows-app/releases/latest)
+[![GitHub Release](https://img.shields.io/github/v/release/filehub1/filehub-desktop?include_prereleases&label=release)](https://github.com/filehub1/filehub-desktop/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/filehub1/filehub-desktop/total)](https://github.com/filehub1/filehub-desktop/releases/latest)
 
 **Requirements:**
 - Windows 10 / 11
 - .NET 10 Runtime (or use self-contained build)
 - Microsoft Edge WebView2 Runtime (usually pre-installed)
 
-[Download from GitHub Releases →](https://github.com/filehub1/filehub-windows-app/releases)
+[Download from GitHub Releases →](https://github.com/filehub1/filehub-desktop/releases)
 
 ## Installation
 
-1. Download the latest `filehub-windows-app-*.zip` from Releases
+1. Download the latest `filehub-desktop-*.zip` from Releases
 2. Extract to a folder of your choice
 3. Run `filehub.exe`
 
@@ -108,8 +108,8 @@ theme: dark          # dark or light
 
 **Steps:**
 ```powershell
-git clone https://github.com/filehub1/filehub-windows-app.git
-cd filehub-windows-app
+git clone https://github.com/filehub1/filehub-desktop.git
+cd filehub-desktop
 
 # Build the web frontend first
 cd ../filehub-server
@@ -117,7 +117,7 @@ npm install
 npm run build
 
 # Build the Windows app
-cd ../filehub-windows-app
+cd ../filehub-desktop
 dotnet build
 
 # Output: bin/Debug/net10.0-windows/filehub.exe

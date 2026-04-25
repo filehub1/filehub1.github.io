@@ -179,7 +179,7 @@ docker-compose up -d
 
 ## 下一步
 
-- [Windows 应用下载](https://github.com/filehub1/filehub-windows-app/releases)
+- [filehub-desktop 下载](https://github.com/filehub1/filehub-desktop/releases)
 - [Android 应用下载](https://github.com/filehub1/android/releases)
 - [查看源码](https://github.com/filehub1/filehub-server)
 

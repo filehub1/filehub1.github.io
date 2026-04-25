@@ -142,7 +142,7 @@ Output: `android/app/build/outputs/apk/release/app-release.apk`
 ## Related
 
 - [FileHub Server](/docs/filehub-docker.md) — Docker deployment
-- [Windows App](https://github.com/filehub1/filehub-windows-app) — Desktop version
+- [filehub-desktop](https://github.com/filehub1/filehub-desktop) — Desktop version for Windows, macOS, and Linux
 - [Website](https://filehub1.github.io) — Product overview
 
 ## License
